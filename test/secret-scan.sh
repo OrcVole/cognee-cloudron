@@ -133,10 +133,12 @@ else
 fi
 
 echo "=== IMAGE scan: ${IMAGE:-<none>} ==="
-if   [[ -z "$IMAGE" ]]; then echo "  (no image given; pass one as \$1 or set SCAN_IMAGE)"
-elif [[ -z "$CRI"   ]]; then echo "  (no podman or docker found; skipped)"
+# A scan that skips the image half must FAIL, never pass: the image is what the world pulls, and a skipped
+# half printed "OK" for weeks on other packages (estate NEXT A0b). Each branch below counts as a failure.
+if   [[ -z "$IMAGE" ]]; then echo "  FAIL: no image given; pass one as \$1 or set SCAN_IMAGE"; fail=1
+elif [[ -z "$CRI"   ]]; then echo "  FAIL: no podman or docker found, so the image cannot be scanned"; fail=1
 elif ! "$CRI" image exists "$IMAGE" 2>/dev/null && ! "$CRI" image inspect "$IMAGE" >/dev/null 2>&1; then
-  echo "  ($IMAGE not present locally; pull it to scan)"
+  echo "  FAIL: $IMAGE is not present locally; pull it, then scan"; fail=1
 else
   # --- runtime-managed files are NOT image content -------------------------------------------
   # Both engines bind-mount /etc/hosts, /etc/resolv.conf and /etc/hostname into every container, so

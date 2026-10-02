@@ -49,5 +49,6 @@
     "language-model": {
       "message": "Optional: point Cognee at a language model (LLM_PROVIDER, LLM_ENDPOINT, LLM_MODEL, LLM_API_KEY) for richer extraction; without one it extracts with the local GLiNER model. See POSTINSTALL.md."
     }
-  }
+  },
+  "dockerImage": "ghcr.io/orcvole/cognee-cloudron@sha256:9d77d6eac83e2e0019633532bc26bbfaf752dba8ab127ecc12b5605a5ca6ef7b"
 }
