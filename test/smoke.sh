@@ -28,7 +28,7 @@ podman network create "$NET" >/dev/null
 podman volume create "$ID-data" >/dev/null
 podman run -d --name "$ID-pg" --network "$NET" --network-alias pg \
     -e POSTGRES_USER=cognee -e POSTGRES_PASSWORD=smokepass -e POSTGRES_DB=cognee \
-    docker.io/library/postgres:16 >/dev/null
+    "${SMOKE_PG_IMAGE:-docker.io/library/postgres:16}" >/dev/null
 for _ in $(seq 1 30); do podman exec "$ID-pg" pg_isready -U cognee >/dev/null 2>&1 && break; sleep 2; done
 
 start_app() {
