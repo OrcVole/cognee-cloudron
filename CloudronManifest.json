@@ -1,0 +1,53 @@
+{
+  "id": "io.github.orcvole.cognee",
+  "title": "Cognee",
+  "version": "0.1.0",
+  "upstreamVersion": "1.6.2",
+  "manifestVersion": 2,
+  "minBoxVersion": "10.0.0",
+  "httpPort": 8080,
+  "healthCheckPath": "/health",
+  "memoryLimit": 4294967296,
+  "addons": {
+    "localstorage": {},
+    "postgresql": {}
+  },
+  "tagline": "Knowledge-graph memory for AI agents",
+  "description": "file://DESCRIPTION.md",
+  "postInstallMessage": "file://POSTINSTALL.md",
+  "changelog": "file://CHANGELOG",
+  "icon": "file://logo.png",
+  "iconUrl": "https://raw.githubusercontent.com/OrcVole/cognee-cloudron/main/logo.png",
+  "mediaLinks": [
+    "https://raw.githubusercontent.com/OrcVole/cognee-cloudron/main/screenshots/graph.png"
+  ],
+  "website": "https://www.cognee.ai",
+  "packagerName": "OrcVole",
+  "packagerUrl": "https://github.com/OrcVole",
+  "packageUrl": "https://github.com/OrcVole/cognee-cloudron",
+  "upstreamLicense": {
+    "name": "Apache-2.0",
+    "url": "https://github.com/topoteretes/cognee/blob/main/LICENSE"
+  },
+  "tags": [
+    "ai",
+    "knowledge-graph",
+    "memory",
+    "rag",
+    "mcp"
+  ],
+  "checklist": {
+    "admin-email": {
+      "message": "Set the administrator's email address: open a Terminal for this app and run /app/code/set-admin-email.sh you@example.com. It renames the existing account; do not change the address any other way."
+    },
+    "admin-password": {
+      "message": "Read the administrator password from /app/data/.secrets/env (DEFAULT_USER_PASSWORD) with the File Manager or Terminal, then sign in."
+    },
+    "models": {
+      "message": "The local extraction and embedding models download on first use, not at install: about 784 MB (GLiNER) and 67 MB (fastembed) into /app/data/models. The first cognify is slow while they download."
+    },
+    "language-model": {
+      "message": "Optional: point Cognee at a language model (LLM_PROVIDER, LLM_ENDPOINT, LLM_MODEL, LLM_API_KEY) for richer extraction; without one it extracts with the local GLiNER model. See POSTINSTALL.md."
+    }
+  }
+}
