@@ -13,8 +13,9 @@ Open the app and go to **Sign in**. **The form is pre-filled with upstream's own
 ## First use is slow
 
 The local extraction and embedding models are downloaded the first time they are needed (about 850 MB
-together) into `/app/data/models`. The first `cognify` therefore takes longer and needs outbound internet
-access. Later runs reuse them.
+together) into `/app/models`. They are **not included in backups** (they are large and can be fetched again), so after
+a restore the first `cognify` downloads them again and needs outbound internet access, as it does on a new
+install. Later runs reuse them.
 
 ## Add a language model (optional)
 

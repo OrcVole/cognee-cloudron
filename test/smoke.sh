@@ -21,11 +21,12 @@ B="http://127.0.0.1:$PORT"; PASS=0; FAIL=0
 ok()   { PASS=$((PASS + 1)); echo "PASS  $*"; }
 bad()  { FAIL=$((FAIL + 1)); echo "FAIL  $*"; }
 code() { curl -s -o /dev/null -w '%{http_code}' "$@"; }
-cleanup() { podman rm -f "$ID" "$ID-pg" >/dev/null 2>&1; podman volume rm -f "$ID-data" >/dev/null 2>&1; podman network rm -f "$NET" >/dev/null 2>&1; }
+cleanup() { podman rm -f "$ID" "$ID-pg" >/dev/null 2>&1; podman volume rm -f "$ID-data" "$ID-models" >/dev/null 2>&1; podman network rm -f "$NET" >/dev/null 2>&1; }
 trap cleanup EXIT
 
 podman network create "$NET" >/dev/null
 podman volume create "$ID-data" >/dev/null
+podman volume create "$ID-models" >/dev/null   # the platform bind-mounts persistentDirs; the root is read-only
 podman run -d --name "$ID-pg" --network "$NET" --network-alias pg \
     -e POSTGRES_USER=cognee -e POSTGRES_PASSWORD=smokepass -e POSTGRES_DB=cognee \
     "${SMOKE_PG_IMAGE:-docker.io/library/postgres:16}" >/dev/null
@@ -33,7 +34,7 @@ for _ in $(seq 1 30); do podman exec "$ID-pg" pg_isready -U cognee >/dev/null 2>
 
 start_app() {
     podman run -d --name "$ID" --network "$NET" --read-only --tmpfs /tmp --tmpfs /run \
-        -v "$ID-data":/app/data -p "127.0.0.1:$PORT:8080" \
+        -v "$ID-data":/app/data -v "$ID-models":/app/models -p "127.0.0.1:$PORT:8080" \
         -e CLOUDRON_APP_DOMAIN=$DOMAIN -e CLOUDRON_APP_ORIGIN=https://$DOMAIN \
         -e CLOUDRON_POSTGRESQL_HOST=pg -e CLOUDRON_POSTGRESQL_PORT=5432 \
         -e CLOUDRON_POSTGRESQL_USERNAME=cognee -e CLOUDRON_POSTGRESQL_PASSWORD=smokepass \
@@ -99,8 +100,8 @@ echo "$hits" | grep -q 'Babbage' && ok "search finds the documents" || bad "sear
 podman logs "$ID" 2>&1 | grep -qiE 'pip install|uv pip install|GlinerInstallError|installing the gliner' \
     && bad "something was installed at runtime" || ok "nothing installed at runtime"
 # start.sh creates both directories empty, so require files in each, not the directories.
-podman exec "$ID" sh -c '[ -n "$(find /app/data/models/huggingface -type f | head -1)" ] && [ -n "$(find /app/data/models/fastembed -type f | head -1)" ]' \
-    && ok "model files cached under /app/data/models" || bad "no model files under /app/data/models"
+podman exec "$ID" sh -c '[ -n "$(find /app/models/huggingface -type f | head -1)" ] && [ -n "$(find /app/models/fastembed -type f | head -1)" ]' \
+    && ok "model files cached under /app/models (a persistent directory, out of backups)" || bad "no model files under /app/models"
 
 NEWADMIN=renamed-admin@example.com
 podman exec "$ID" /app/code/set-admin-email.sh "$NEWADMIN" >/dev/null 2>&1 && ok "set-admin-email.sh ran" || bad "set-admin-email.sh failed"

@@ -14,7 +14,7 @@ and agents query them. This repository packages upstream release **v1.6.2** (com
 - Generates the three signing secrets and the administrator password once, into `/app/data/.secrets/env`,
   and never regenerates them (a restart would otherwise sign everyone out).
 - Closes self-registration, turns telemetry off, and keeps upstream's model downloads out of the image:
-  the local extraction and embedding models download on first use into `/app/data/models`.
+  the local extraction and embedding models download on first use into `/app/models`, a persistent directory that is kept across updates and left out of backups.
 - Installs the extraction runtime at build time, because installing it at runtime fails on a read-only
   filesystem.
 

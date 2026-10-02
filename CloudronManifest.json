@@ -44,11 +44,14 @@
       "message": "Read the administrator password from /app/data/.secrets/env (DEFAULT_USER_PASSWORD) with the File Manager or Terminal, then sign in."
     },
     "models": {
-      "message": "The local extraction and embedding models download on first use, not at install: about 784 MB (GLiNER) and 67 MB (fastembed) into /app/data/models. The first cognify is slow while they download."
+      "message": "The local extraction and embedding models download on first use, not at install: about 784 MB (GLiNER) and 67 MB (fastembed) into /app/models. The first cognify is slow while they download."
     },
     "language-model": {
       "message": "Optional: point Cognee at a language model (LLM_PROVIDER, LLM_ENDPOINT, LLM_MODEL, LLM_API_KEY) for richer extraction; without one it extracts with the local GLiNER model. See POSTINSTALL.md."
     }
   },
-  "dockerImage": "ghcr.io/orcvole/cognee-cloudron@sha256:9d77d6eac83e2e0019633532bc26bbfaf752dba8ab127ecc12b5605a5ca6ef7b"
+  "dockerImage": "ghcr.io/orcvole/cognee-cloudron@sha256:9d77d6eac83e2e0019633532bc26bbfaf752dba8ab127ecc12b5605a5ca6ef7b",
+  "persistentDirs": [
+    "/app/models"
+  ]
 }
