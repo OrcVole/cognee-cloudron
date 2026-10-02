@@ -7,8 +7,8 @@
 # Runs the image the way the platform does: read-only root filesystem, writable /app/data, /tmp and
 # /run, a real PostgreSQL, and the platform's database variables. Then, in order:
 #   health answers 200 on /health and NOT on a wrong path (a check that cannot fail is not a check);
-#   self-registration is refused (403); the four interface routes that would otherwise sign in as the
-#   administrator refuse an anonymous request (401); the administrator signs in with the generated
+#   self-registration is refused (403); four interface routes that require sign-in
+#   refuse an anonymous request (401); the administrator signs in with the generated
 #   password, and a wrong password is refused; three documents are added, cognify runs with no language
 #   model (the local extraction and embedding models download on first use), and a search finds them;
 #   nothing was installed at runtime; after a restart the secrets are unchanged and the old session works.

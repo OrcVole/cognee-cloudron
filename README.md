@@ -5,6 +5,20 @@ open-source memory layer for AI agents: documents go in, a knowledge graph and a
 and agents query them. This repository packages upstream release **v1.6.2** (commit `ba3631f`) on
 `cloudron/base` 6.0.0. It contains no upstream source; the image build fetches it at the pinned commit.
 
+![The Mindmap of a small demo dataset](screenshots/mindmap.png)
+
+## Install
+
+From the community store at https://ca.cloudron.io, or directly (Cloudron 10 or newer):
+
+```bash
+cloudron install --versions-url https://raw.githubusercontent.com/OrcVole/cognee-cloudron/main/CloudronVersions.json --location cognee.example.com
+```
+
+After installing, follow the post-install checklist: set a real administrator address with `set-admin-email.sh`, and
+read the memory and model-download notes. The sign-in is by email and password; the generated administrator
+password is in `/app/data/.secrets/env` (see the post-install note).
+
 ## What the package does
 
 - Runs Cognee's API and web interface behind one address. nginx sends `/health` and `/api/v<N>/` to the
@@ -45,6 +59,12 @@ The smoke test runs the image the way the platform does (read-only root filesyst
 and checks health, closed registration, sign-in, adding documents, `cognify` with no language model,
 search, the administrator rename, and a restart. `test/gate2.sh` runs the same kind of checks against a
 live install over HTTPS and cleans up after itself.
+
+## More
+
+[`AGENTS.md`](AGENTS.md) is the working contract; [`docs/`](docs/) holds the decisions, the gate evidence
+([`DEBUGGING.md`](docs/DEBUGGING.md)), the packaging log, and notes for the [Cloudron team](docs/FOR-CLOUDRON.md) and
+the [Cognee project](docs/FOR-UPSTREAM.md).
 
 ## Licence
 

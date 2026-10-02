@@ -10,7 +10,7 @@
 #
 # What it proves, in order:
 #   refused: wrong password (400), a missing credential (401), a made-up API key (401), self-registration (403),
-#            the four interface routes that would otherwise answer for anonymous callers (401);
+#            four interface routes that require sign-in (401);
 #   open:    /health, /docs and the sign-in page need no credentials;
 #   works:   sign-in, three documents added, cognify with no language model, a chunk search that finds them,
 #            an API key that works and is then revoked.

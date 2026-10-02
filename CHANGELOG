@@ -4,6 +4,7 @@
   in the data directory.
 * Sign-in by email and password. Self-registration is closed and telemetry is off. The three signing
   secrets and the administrator password are generated once and kept in the data directory.
-* The local extraction and embedding models download on first use. A language model is optional and can
-  be any OpenAI-compatible endpoint.
+* The local extraction and embedding models download on first use into a persistent directory that is left
+  out of backups. A language model is optional and can be any OpenAI-compatible endpoint; with one, and an
+  embedding endpoint, neither local model is fetched.
 * `set-admin-email.sh` renames the administrator safely.

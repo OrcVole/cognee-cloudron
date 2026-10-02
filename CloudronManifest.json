@@ -19,7 +19,8 @@
   "icon": "file://logo.png",
   "iconUrl": "https://raw.githubusercontent.com/OrcVole/cognee-cloudron/main/logo.png",
   "mediaLinks": [
-    "https://raw.githubusercontent.com/OrcVole/cognee-cloudron/main/screenshots/graph.png"
+    "https://raw.githubusercontent.com/OrcVole/cognee-cloudron/main/screenshots/mindmap.png",
+    "https://raw.githubusercontent.com/OrcVole/cognee-cloudron/main/screenshots/brain.png"
   ],
   "website": "https://www.cognee.ai",
   "packagerName": "OrcVole",
