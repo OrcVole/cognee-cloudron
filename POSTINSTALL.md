@@ -20,6 +20,10 @@ install. Later runs reuse them.
 ## Add a language model (optional)
 
 Without one, entities are extracted by the small local model and answer-style searches are unavailable.
+With a language model **and** an embedding endpoint configured, neither local model is downloaded or loaded: a
+348-document run this way left the model folder empty and the app at about 2.4 GB, against 5.3 GB with the local
+models. The memory limit can then be lowered. With a language model but the default embedder, only the small
+embedding model (about 65 MB) is fetched.
 To use any OpenAI-compatible endpoint, set these in the app's environment and restart:
 
 ```text
