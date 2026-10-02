@@ -26,3 +26,6 @@ on a locked-down platform.
 8. **Bulk ingestion against a single-slot local model.** With a one-slot server, a request throttle near the
    server's own rate stops a queue of timeouts from turning into a retry storm. We use `LLM_RATE_LIMIT_*`; a
    mention in the local-model docs may help others.
+9. **The default embedding batch of 36 exceeds common servers' limits.** Text Embeddings Inference accepts at most 32
+   inputs per request and answers 422 above that, which only appears on documents long enough to produce a large batch.
+   A smaller default, or a line in the embedding documentation, would save others the search.

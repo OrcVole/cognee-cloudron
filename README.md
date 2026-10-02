@@ -66,6 +66,13 @@ live install over HTTPS and cleans up after itself.
 ([`DEBUGGING.md`](docs/DEBUGGING.md)), the packaging log, and notes for the [Cloudron team](docs/FOR-CLOUDRON.md) and
 the [Cognee project](docs/FOR-UPSTREAM.md).
 
+## Embedding servers with a batch limit
+
+Cognee sends embeddings in batches of 36 by default. Some servers accept fewer: Text Embeddings Inference refuses more
+than 32 inputs in one request with a 422, which shows up as an embedding failure on long documents only. Set
+`EMBEDDING_BATCH_SIZE=16` in the app's environment, and keep `EMBEDDING_MAX_COMPLETION_TOKENS` below the server's
+input limit (480 for a 512-token model).
+
 ## Licence
 
 The package is released under the Apache License 2.0, the same as Cognee. See `LICENSE`.
