@@ -52,6 +52,22 @@ for p in /api/visualize /api/schema/inventory /api/schema/provenance /api/schema
     [ "$(code "$B$p")" = 401 ] && ok "anonymous $p refused (401)" || bad "anonymous $p not refused"
 done
 [ "$(code "$B/")" = 200 ] && ok "the interface answers at /" || bad "the interface does not answer at /"
+# The interface refuses its own server actions when the Host it sees differs from the Origin the browser
+# sends. nginx's $host drops the port, so any non-standard port broke sign-in follow-ups (found by a local
+# run on :8100; Cloudron's 443 hides it). Send a server action whose Origin carries a port; the interface
+# logs "does not match `origin`" only when the proxy lost the port.
+# A made-up action ID is NOT enough: Next only compares Host and Origin for a real action, so a fake one
+# passes on a broken proxy (the first version of this check did exactly that). Take a real ID from the
+# built interface.
+AID=$(for a in $(curl -s "$B/" | grep -oE '/_next/static/[^"]+\.js' | sort -u); do curl -s "$B$a"; done \
+    | grep -oE '"00[0-9a-f]{40}"' | head -1 | tr -d '"')
+[ -n "$AID" ] && ok "found a real server action ID in the interface" || bad "no server action ID found"
+curl -s -o /dev/null -X POST -H 'Host: probe.example:8123' -H 'Origin: http://probe.example:8123' \
+    -H "Next-Action: $AID" -H 'Content-Type: text/plain;charset=UTF-8' -d '[]' "$B/"
+sleep 1
+podman logs "$ID" 2>&1 | grep -q 'does not match `origin`' \
+    && bad "the proxy dropped the port: the interface rejects its server actions on a non-standard port" \
+    || ok "the proxy keeps the port in Host (server actions accepted on a non-standard port)"
 
 ADMIN=$(podman exec "$ID" cat /app/data/admin-email)
 PW=$(podman exec "$ID" sh -c '. /app/data/.secrets/env; printf %s "$DEFAULT_USER_PASSWORD"')
