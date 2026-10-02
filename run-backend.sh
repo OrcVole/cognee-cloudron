@@ -22,7 +22,7 @@ export FASTEMBED_CACHE_PATH=/app/data/models/fastembed
 export HOME=/app/data/home
 export TELEMETRY_DISABLED=1
 export ENV=production
-export CORS_ALLOWED_ORIGINS=https://$CLOUDRON_APP_DOMAIN
+export CORS_ALLOWED_ORIGINS=$CLOUDRON_APP_ORIGIN
 export ACCEPT_LOCAL_FILE_PATH=true
 export COGNEE_ALLOWED_LOCAL_FILE_ROOTS=/app/data/data
 export ALLOW_CYPHER_QUERY=false
@@ -35,10 +35,7 @@ export PATH=/app/code/.venv/bin:$PATH
 export UV_PYTHON_DOWNLOADS=never
 export PYTHONUNBUFFERED=1
 
-set -a
-. /app/data/.secrets/env
-set +a
-
+set -a; . /app/data/.secrets/env; set +a
 export DEFAULT_USER_EMAIL="$(cat /app/data/admin-email)"
 
 gosu cloudron:cloudron env HOME=/app/data/home python - <<'PYTHON'
