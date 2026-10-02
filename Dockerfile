@@ -31,6 +31,8 @@ COPY --from=src /src/kuzu /app/code/kuzu
 COPY --from=ladybug-extensions /bundle/ /app/code/cognee_db_workers/ladybug_extensions/
 RUN uv sync --python 3.12 --extra debug --extra aws --extra api --extra postgres --extra neo4j --extra llama-index --extra dlt --extra ollama --extra mistral --extra groq --extra anthropic --extra tracing --frozen --no-dev --no-editable
 RUN /app/code/.venv/bin/python -m cognee.tasks.graph.gliner_demo.install
+# Upstream's test suite and its fixtures are not needed at runtime (11 MB).
+RUN rm -rf /app/code/cognee/tests
 
 FROM docker.io/cloudron/base:6.0.0@sha256:9bed4c8fa880645f8e669041ee28febe941481d00e9445e3e5a5483cb541d09b
 COPY --from=py /app/code /app/code

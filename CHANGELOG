@@ -1,0 +1,9 @@
+[0.1.0]
+* First release: Cognee 1.6.2 (upstream release v1.6.2, commit ba3631f), built on cloudron/base 6.0.0.
+* API and web interface behind one address; PostgreSQL from the platform, graph and vector stores as files
+  in the data directory.
+* Sign-in by email and password. Self-registration is closed and telemetry is off. The three signing
+  secrets and the administrator password are generated once and kept in the data directory.
+* The local extraction and embedding models download on first use. A language model is optional and can
+  be any OpenAI-compatible endpoint.
+* `set-admin-email.sh` renames the administrator safely.

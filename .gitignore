@@ -1,0 +1,12 @@
+phase-notes/
+*foundation*.md
+.anonymize-list
+.env
+.env.*
+*.key
+credentials*
+.claude/
+*.pyc
+__pycache__/
+pilot/
+upstream/
