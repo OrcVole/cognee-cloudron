@@ -47,7 +47,7 @@ printf '%s\n' "The Analytical Engine was a proposed mechanical general-purpose c
 printf '%s\n' "Grace Hopper developed the first compiler and popularised machine-independent programming languages." > "$T/3.txt"
 ADDED=0; c=$(code -X POST -H "$H" -F "data=@$T/1.txt;type=text/plain" -F "data=@$T/2.txt;type=text/plain" -F "data=@$T/3.txt;type=text/plain" -F datasetName="$DS" "$BASE/api/v1/add")
 [ "$c" = 200 ] && { ADDED=1; ok "three documents added"; } || bad "adding documents failed ($c)"
-t0=$(date +%s); c=$(code -m 3000 -X POST -H "$H" -H "$J" -d "{\"datasets\":[\"$DS\"]}" "$BASE/api/v1/cognify")
+t0=$(date +%s); c=$(curl -s -o /dev/null -w '%{http_code}' -m 3000 -X POST -H "$H" -H "$J" -d "{\"datasets\":[\"$DS\"]}" "$BASE/api/v1/cognify")   # not code(): its 60 s limit would cut a first run that is still loading the models
 [ "$c" = 200 ] && [ "$ADDED" = 1 ] && ok "cognify completed with no language model ($(( $(date +%s) - t0 )) s)" || bad "cognify returned $c"
 hits=$(curl -s -m 300 -X POST -H "$H" -H "$J" -d "{\"searchType\":\"CHUNKS\",\"query\":\"Who designed the Analytical Engine?\",\"datasets\":[\"$DS\"]}" "$BASE/api/v1/search")
 echo "$hits" | grep -q 'Babbage' && ok "a chunk search finds the documents" || bad "a chunk search found nothing: ${hits:0:160}"
