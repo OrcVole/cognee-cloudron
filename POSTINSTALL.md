@@ -48,5 +48,8 @@ Interactive API documentation is at `/docs`.
 - Registration is closed (`/api/v1/auth/register` answers 403). Add users as the administrator.
 - Everything Cognee stores, including your documents, is under `/app/data` and in the PostgreSQL addon.
   Turn on backup encryption in the platform settings if the backups leave your server.
-- The memory limit is provisional. Large datasets and local-model extraction use more memory than a
-  small test does; raise it in the app's settings if the app is restarted for lack of memory.
+- The memory limit is 8 GiB, measured: ingesting about 350 documents with the local extraction and
+  embedding models peaked at 7.3 GB, of which 5.3 GB was held by the app itself. **That memory is not
+  released afterwards**: the loaded models stay resident until the app restarts. At the previous 4 GiB the
+  same load ran into the limit and swapped about 2 GB. If you ingest far more than that, or load a large
+  language model's client libraries alongside, check the app's memory graph.

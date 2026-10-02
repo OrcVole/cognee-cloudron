@@ -38,11 +38,13 @@ podman build -t cognee-cloudron:dev .
 test/smoke.sh cognee-cloudron:dev          # needs podman and internet access (models download on first use)
 SMOKE_PG_IMAGE=docker.io/library/postgres:18 test/smoke.sh cognee-cloudron:dev
 test/secret-scan.sh cognee-cloudron:dev    # the pre-publish release gate: repository and image
+BASE=https://cognee.example.com EMAIL=... PASSWORD=... test/gate2.sh   # sign-in and the real job, against a live install
 ```
 
 The smoke test runs the image the way the platform does (read-only root filesystem, a real PostgreSQL)
 and checks health, closed registration, sign-in, adding documents, `cognify` with no language model,
-search, the administrator rename, and a restart.
+search, the administrator rename, and a restart. `test/gate2.sh` runs the same kind of checks against a
+live install over HTTPS and cleans up after itself.
 
 ## Licence
 

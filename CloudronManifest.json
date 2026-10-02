@@ -7,7 +7,7 @@
   "minBoxVersion": "10.0.0",
   "httpPort": 8080,
   "healthCheckPath": "/health",
-  "memoryLimit": 4294967296,
+  "memoryLimit": 8589934592,
   "addons": {
     "localstorage": {},
     "postgresql": {}
