@@ -1,0 +1,68 @@
+{
+  "stable": true,
+  "versions": {
+    "0.1.0": {
+      "manifest": {
+        "id": "io.github.orcvole.cognee",
+        "title": "Cognee",
+        "version": "0.1.0",
+        "upstreamVersion": "1.6.2",
+        "manifestVersion": 2,
+        "minBoxVersion": "10.0.0",
+        "httpPort": 8080,
+        "healthCheckPath": "/health",
+        "memoryLimit": 8589934592,
+        "addons": {
+          "localstorage": {},
+          "postgresql": {}
+        },
+        "tagline": "Knowledge-graph memory for AI agents",
+        "description": "<upstream>1.6.2</upstream>\n\n# Cognee\n\nCognee is an open-source memory layer for AI agents. It turns documents, conversations and other data\ninto a knowledge graph together with a vector index, so an agent can recall facts and how they relate.\nAdd data through the web interface or the REST API, build the graph with `cognify`, and query it by\nchunk search, by graph search, or by asking a question and getting an answer drawn from the graph.\n\nThis package runs the API and the web interface behind one address. PostgreSQL comes from the platform;\nthe graph store (Kuzu) and the vector store (LanceDB) are files in the app's data directory, so they are\ncovered by the platform's backups.\n\n**A language model is optional.** With none configured, Cognee extracts entities with a small local model\n(about 784 MB) and embeds text with another (about 67 MB). Both download the first time they are used,\nnot at install, and are kept in a persistent directory that is left out of backups. Chunk search works this way. Answer-style searches\nand richer graph extraction need a language model: point Cognee at any OpenAI-compatible endpoint with\nthe `LLM_*` and `EMBEDDING_*` settings described in the post-install notes.\n\n**Sign-in is by email and password only.** There is no single sign-on, no mail is sent, and there is no\npassword reset by email: an administrator with access to the app resets passwords. Self-registration is\nclosed, and telemetry is off.\n\nThe web interface is upstream's open-source one. Its Overview panels are marked as Cognee Cloud features\nand stay empty; the Brain, Search and Mindmap pages are the useful ones.\n",
+        "postInstallMessage": "## Sign in\n\nOpen the app and go to **Sign in**. **The form is pre-filled with upstream's own defaults\n(`default_user@example.com` and a placeholder password). They are not valid here: replace both.**\n\n- The administrator's address is the content of `/app/data/admin-email`. It starts as\n  `admin@<this app's domain>`; change it with `/app/code/set-admin-email.sh you@example.com` from a\n  Terminal for this app. Do not change it any other way: Cognee finds its administrator by address, and a\n  mismatch silently creates a second administrator with no password.\n- The password is generated once at first start and kept in `/app/data/.secrets/env` as\n  `DEFAULT_USER_PASSWORD` (File Manager or Terminal). It never changes unless you change it in the app.\n\n## First use is slow\n\nThe local extraction and embedding models are downloaded the first time they are needed (about 850 MB\ntogether) into `/app/models`. They are **not included in backups** (they are large and can be fetched again), so after\na restore the first `cognify` downloads them again and needs outbound internet access, as it does on a new\ninstall. Later runs reuse them.\n\n## Add a language model (optional)\n\nWithout one, entities are extracted by the small local model and answer-style searches are unavailable.\nWith a language model **and** an embedding endpoint configured, neither local model is downloaded or loaded: a\n348-document run this way left the model folder empty and the app at about 2.4 GB, against 5.3 GB with the local\nmodels. The memory limit can then be lowered. With a language model but the default embedder, only the small\nembedding model (about 65 MB) is fetched.\nTo use any OpenAI-compatible endpoint, set these in the app's environment and restart:\n\n```text\nLLM_PROVIDER=custom\nLLM_MODEL=openai/<model name>\nLLM_ENDPOINT=https://llm.example.com/v1\nLLM_API_KEY=<key>\nEMBEDDING_PROVIDER=openai_compatible\nEMBEDDING_ENDPOINT=https://embeddings.example.com/v1\nEMBEDDING_MODEL=<model name>\nEMBEDDING_DIMENSIONS=<the model's vector size>\nEMBEDDING_API_KEY=<key>\n```\n\n**Choose the embedding model before adding data.** The vector size is fixed when a dataset is first\nindexed; changing the model later means starting that dataset again. If your server rejects a parameter\nsuch as `reasoning_effort`, set `LLM_ARGS={\"reasoning_effort\":\"low\",\"allowed_openai_params\":[\"reasoning_effort\"]}`:\nwithout the allow-list the call fails and Cognee reports a connection timeout.\n\n## Calling the API from other programs\n\nCreate a key on the **API Keys** page (or `POST /api/v1/auth/api-keys`) and send it as `X-Api-Key`.\nInteractive API documentation is at `/docs`.\n\n## Good to know\n\n- Registration is closed (`/api/v1/auth/register` answers 403). Add users as the administrator.\n- Everything Cognee stores, including your documents, is under `/app/data` and in the PostgreSQL addon.\n  Turn on backup encryption in the platform settings if the backups leave your server.\n- The memory limit is 8 GiB, measured: ingesting about 350 documents with the local extraction and\n  embedding models peaked at 7.3 GB, of which 5.3 GB was held by the app itself. **That memory is not\n  released afterwards**: the loaded models stay resident until the app restarts. At the previous 4 GiB the\n  same load ran into the limit and swapped about 2 GB. If you ingest far more than that, or load a large\n  language model's client libraries alongside, check the app's memory graph.\n",
+        "changelog": "* First release: Cognee 1.6.2 (upstream release v1.6.2, commit ba3631f), built on cloudron/base 6.0.0.\n* API and web interface behind one address; PostgreSQL from the platform, graph and vector stores as files\n  in the data directory.\n* Sign-in by email and password. Self-registration is closed and telemetry is off. The three signing\n  secrets and the administrator password are generated once and kept in the data directory.\n* The local extraction and embedding models download on first use into a persistent directory that is left\n  out of backups. A language model is optional and can be any OpenAI-compatible endpoint; with one, and an\n  embedding endpoint, neither local model is fetched.\n* `set-admin-email.sh` renames the administrator safely.\n",
+        "icon": "file://logo.png",
+        "iconUrl": "https://raw.githubusercontent.com/OrcVole/cognee-cloudron/main/logo.png",
+        "mediaLinks": [
+          "https://raw.githubusercontent.com/OrcVole/cognee-cloudron/main/screenshots/mindmap.png",
+          "https://raw.githubusercontent.com/OrcVole/cognee-cloudron/main/screenshots/brain.png"
+        ],
+        "website": "https://www.cognee.ai",
+        "packagerName": "OrcVole",
+        "packagerUrl": "https://github.com/OrcVole",
+        "packageUrl": "https://github.com/OrcVole/cognee-cloudron",
+        "upstreamLicense": {
+          "name": "Apache-2.0",
+          "url": "https://github.com/topoteretes/cognee/blob/main/LICENSE"
+        },
+        "tags": [
+          "ai",
+          "knowledge-graph",
+          "memory",
+          "rag",
+          "mcp"
+        ],
+        "checklist": {
+          "admin-email": {
+            "message": "Set the administrator's email address: open a Terminal for this app and run /app/code/set-admin-email.sh you@example.com. It renames the existing account; do not change the address any other way."
+          },
+          "admin-password": {
+            "message": "Read the administrator password from /app/data/.secrets/env (DEFAULT_USER_PASSWORD) with the File Manager or Terminal, then sign in."
+          },
+          "models": {
+            "message": "The local extraction and embedding models download on first use, not at install: about 784 MB (GLiNER) and 67 MB (fastembed) into /app/models. The first cognify is slow while they download."
+          },
+          "language-model": {
+            "message": "Optional: point Cognee at a language model (LLM_PROVIDER, LLM_ENDPOINT, LLM_MODEL, LLM_API_KEY) for richer extraction; without one it extracts with the local GLiNER model. See POSTINSTALL.md."
+          }
+        },
+        "dockerImage": "ghcr.io/orcvole/cognee-cloudron@sha256:4d3ccda22eea24fa94b67860d8f0e5e46a721cf34f6d80b2da4397c5cd483bf9",
+        "persistentDirs": [
+          "/app/models"
+        ]
+      },
+      "creationDate": "2026-10-02T15:24:19.000Z",
+      "ts": 1790954659000,
+      "publishState": "published"
+    }
+  }
+}
