@@ -11,7 +11,7 @@ test box running Cloudron 10.0.5 with PostgreSQL 16. A rebuilt image restarts th
 | 2 flows | **PASS** | `test/gate2.sh` 20 of 20: three documents added, keyless `cognify` in about 40 s, chunk search finds them, an API key issued, used, revoked and then refused; the script was shown to fail on a wrong password and on a dead address |
 | 3 update, backup, restore, clone | **PASS** | see below |
 | 4 memory | **PASS at 8 GiB** (fails at 4 GiB) | see below |
-| 5 stranger path | recorded below once run | install from the published versions file |
+| 5 stranger path | **PASS** | see below |
 
 ## Gate 3
 
@@ -46,6 +46,16 @@ Load: 348 documents through the keyless `cognify` (local extraction and embeddin
 
 At 4 GiB nothing was killed, which is what makes it dangerous: swap absorbed 2 GB and a user would only see a slow
 app. The shipped limit is 8 GiB. The loaded models and allocator caches are not released after the load.
+
+## Gate 5: the stranger path
+
+Installed on a fresh subdomain of the test box with only the public versions URL and no credentials:
+`cloudron install --versions-url https://raw.githubusercontent.com/OrcVole/cognee-cloudron/main/CloudronVersions.json`.
+The log said `Using image ...@sha256:4d3ccda2... (from versions url)`; the icon was downloaded; the app was healthy
+in about 30 seconds; the effective memory limit was 8 GiB; `test/gate2.sh` passed 20 of 20 against it; the models
+landed in the persistent folder (812 MB) on first use. The image was also pulled by digest with an empty credentials
+file before this, and the image ID matched the build. The throwaway was uninstalled afterwards and its siblings were
+untouched.
 
 ## Divergences from prediction
 
