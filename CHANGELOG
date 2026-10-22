@@ -1,3 +1,10 @@
+[0.1.1]
+* Base image cloudron/base 6.0.0 to 6.0.1: Ubuntu security updates, including the removal of the compromised eMudhra emSign ECC Root CA - G3 from the trusted certificates.
+* Update Cognee 1.6.2 to 1.6.5 (commit 37f788b). Security items in upstream's notes: public sign-up no longer accepts a parent account (1.6.3), extraction reasons are removed from logs (1.6.3), and the Google Calendar connector was hardened (1.6.5). Self-registration is closed in this package.
+* Upstream behaviour changes: the `temporal_cognify` option is removed; LanceDB's automatic background pruning is removed (this package now prunes it daily, see below); the DLT dependency is pinned below 1.31; agents can no longer create other agents.
+* The bundled Node.js for the web interface moves from 22 (unversioned tag) to 22.23.4, the 2026-10-20 security release.
+* New daily job (03:30, the platform's scheduler) that compacts LanceDB and removes versions older than `COGNEE_LANCEDB_RETENTION_DAYS` (default 7), because upstream no longer prunes and the file count in the backed-up data directory would otherwise grow without bound. Set the variable in the app's environment to change the retention.
+
 [0.1.0]
 * First release: Cognee 1.6.2 (upstream release v1.6.2, commit ba3631f), built on cloudron/base 6.0.0.
 * API and web interface behind one address; PostgreSQL from the platform, graph and vector stores as files

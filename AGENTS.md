@@ -8,7 +8,7 @@ box. **The box is the authority, not the docs.**
 
 Cognee is an open-source memory layer for AI agents: documents go in, a knowledge graph and a vector index come
 out. This package runs upstream's API and its Next.js web interface behind one address, from upstream release
-**1.6.2** (commit `ba3631f`), on `cloudron/base` 6.0.0. It contains no upstream source; the image build fetches
+**1.6.5** (commit `37f788b`), on `cloudron/base` 6.0.1. It contains no upstream source; the image build fetches
 it at the pinned commit.
 
 | Process | Role | Port (localhost) |
@@ -51,8 +51,8 @@ and anything behind a commercial licence.
 
 ## Pinned upstream
 
-- `cloudron/base:6.0.0@sha256:9bed4c8fa880645f8e669041ee28febe941481d00e9445e3e5a5483cb541d09b`
-- Cognee 1.6.2, commit `ba3631f2ed363a6ea50d649c34c56885af6b36fe`, Apache-2.0.
+- `cloudron/base:6.0.1@sha256:7b1e729960c3ca312d26e886917ba89483241bba0219ff292858e10d9d5768ee`
+- Cognee 1.6.5, commit `37f788bd287750e10d7610173e5332b3843f6ebd`, Apache-2.0.
 - The Ladybug extension repository image, `uv` and the Node build image, each by digest in the `Dockerfile`.
 
 ## Build shape

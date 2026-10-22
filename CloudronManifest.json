@@ -1,8 +1,8 @@
 {
   "id": "io.github.orcvole.cognee",
   "title": "Cognee",
-  "version": "0.1.0",
-  "upstreamVersion": "1.6.2",
+  "version": "0.1.1",
+  "upstreamVersion": "1.6.5",
   "manifestVersion": 2,
   "minBoxVersion": "10.0.0",
   "httpPort": 8080,
@@ -10,7 +10,13 @@
   "memoryLimit": 8589934592,
   "addons": {
     "localstorage": {},
-    "postgresql": {}
+    "postgresql": {},
+    "scheduler": {
+      "lancedb-maintain": {
+        "schedule": "30 3 * * *",
+        "command": "gosu cloudron:cloudron /app/code/bin/lancedb-maintain.py"
+      }
+    }
   },
   "tagline": "Knowledge-graph memory for AI agents",
   "description": "file://DESCRIPTION.md",
@@ -51,7 +57,7 @@
       "message": "Optional: point Cognee at a language model (LLM_PROVIDER, LLM_ENDPOINT, LLM_MODEL, LLM_API_KEY) for richer extraction; without one it extracts with the local GLiNER model. See POSTINSTALL.md."
     }
   },
-  "dockerImage": "ghcr.io/orcvole/cognee-cloudron@sha256:4d3ccda22eea24fa94b67860d8f0e5e46a721cf34f6d80b2da4397c5cd483bf9",
+  "dockerImage": "ghcr.io/orcvole/cognee-cloudron@sha256:045495b925e258ecdf43135e1d97324590b2dbe7b5f234d15100745a40abc976",
   "persistentDirs": [
     "/app/models"
   ]

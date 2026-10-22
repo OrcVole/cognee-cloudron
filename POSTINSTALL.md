@@ -43,6 +43,12 @@ indexed; changing the model later means starting that dataset again. If your ser
 such as `reasoning_effort`, set `LLM_ARGS={"reasoning_effort":"low","allowed_openai_params":["reasoning_effort"]}`:
 without the allow-list the call fails and Cognee reports a connection timeout.
 
+## LanceDB maintenance
+
+Upstream no longer prunes LanceDB, so a daily job (03:30) compacts it and removes versions older than 7 days; the
+latest version is never removed. Set `COGNEE_LANCEDB_RETENTION_DAYS=<days>` in the app's environment to change
+that. Without pruning, the number of files in the backed-up data directory grows with every write.
+
 ## Calling the API from other programs
 
 Create a key on the **API Keys** page (or `POST /api/v1/auth/api-keys`) and send it as `X-Api-Key`.

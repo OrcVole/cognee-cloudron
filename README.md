@@ -2,8 +2,8 @@
 
 A [Cloudron](https://www.cloudron.io) package for [Cognee](https://github.com/topoteretes/cognee), an
 open-source memory layer for AI agents: documents go in, a knowledge graph and a vector index come out,
-and agents query them. This repository packages upstream release **v1.6.2** (commit `ba3631f`) on
-`cloudron/base` 6.0.0. It contains no upstream source; the image build fetches it at the pinned commit.
+and agents query them. This repository packages upstream release **v1.6.5** (commit `37f788b`) on
+`cloudron/base` 6.0.1. It contains no upstream source; the image build fetches it at the pinned commit.
 
 ![The Mindmap of a small demo dataset](screenshots/mindmap.png)
 
@@ -72,6 +72,12 @@ Cognee sends embeddings in batches of 36 by default. Some servers accept fewer: 
 than 32 inputs in one request with a 422, which shows up as an embedding failure on long documents only. Set
 `EMBEDDING_BATCH_SIZE=16` in the app's environment, and keep `EMBEDDING_MAX_COMPLETION_TOKENS` below the server's
 input limit (480 for a 512-token model).
+
+## LanceDB maintenance
+
+A daily scheduler task (`bin/lancedb-maintain.py`) compacts every LanceDB table and removes versions older than
+`COGNEE_LANCEDB_RETENTION_DAYS` (default 7), because upstream 1.6.4 removed automatic pruning and the backed-up
+data directory would otherwise grow without bound. It exits 0 when there is no LanceDB directory yet.
 
 ## Licence
 

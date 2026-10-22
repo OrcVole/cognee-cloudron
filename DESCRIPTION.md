@@ -1,4 +1,4 @@
-<upstream>1.6.2</upstream>
+<upstream>1.6.5</upstream>
 
 # Cognee
 

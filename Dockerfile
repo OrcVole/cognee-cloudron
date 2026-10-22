@@ -7,17 +7,17 @@ RUN mkdir -p /bundle && cd /usr/share/nginx/html && \
 
 FROM ghcr.io/astral-sh/uv:0.12.22@sha256:f513a91fc62fe7c17567eee97230dd198e43edb8a9fbecca843714a4358fe1bc AS uvbin
 
-FROM docker.io/cloudron/base:6.0.0@sha256:9bed4c8fa880645f8e669041ee28febe941481d00e9445e3e5a5483cb541d09b AS src
+FROM docker.io/cloudron/base:6.0.1@sha256:7b1e729960c3ca312d26e886917ba89483241bba0219ff292858e10d9d5768ee AS src
 WORKDIR /src
-RUN git init && git remote add origin https://github.com/topoteretes/cognee.git && git fetch --depth 1 origin ba3631f2ed363a6ea50d649c34c56885af6b36fe && git checkout FETCH_HEAD
+RUN git init && git remote add origin https://github.com/topoteretes/cognee.git && git fetch --depth 1 origin 37f788bd287750e10d7610173e5332b3843f6ebd && git checkout FETCH_HEAD
 
-FROM docker.io/library/node:22-bookworm-slim@sha256:43ac6c60b8f89723f746e8a92ce91abd5017e627ce1ddfe4238355d3a30b772c AS ui
+FROM docker.io/library/node:22.23.4-bookworm-slim@sha256:de170b39439eb0e5a3444ad7d60b015614a381e10fecae2e30ec9e735122f38d AS ui
 COPY --from=src /src/cognee-frontend /ui
 WORKDIR /ui
 ENV NEXT_PUBLIC_IS_CLOUD_ENVIRONMENT=false NEXT_TELEMETRY_DISABLED=1
 RUN npm ci && npm run build
 
-FROM docker.io/cloudron/base:6.0.0@sha256:9bed4c8fa880645f8e669041ee28febe941481d00e9445e3e5a5483cb541d09b AS py
+FROM docker.io/cloudron/base:6.0.1@sha256:7b1e729960c3ca312d26e886917ba89483241bba0219ff292858e10d9d5768ee AS py
 RUN apt-get update && apt-get install -y build-essential gcc clang cmake libpq-dev && rm -rf /var/lib/apt/lists/*
 COPY --from=uvbin /uv /uvx /usr/local/bin/.
 ENV UV_PYTHON_INSTALL_DIR=/app/code/python UV_PROJECT_ENVIRONMENT=/app/code/.venv UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy
@@ -34,7 +34,7 @@ RUN /app/code/.venv/bin/python -m cognee.tasks.graph.gliner_demo.install
 # Upstream's test suite and its fixtures are not needed at runtime (11 MB).
 RUN rm -rf /app/code/cognee/tests
 
-FROM docker.io/cloudron/base:6.0.0@sha256:9bed4c8fa880645f8e669041ee28febe941481d00e9445e3e5a5483cb541d09b
+FROM docker.io/cloudron/base:6.0.1@sha256:7b1e729960c3ca312d26e886917ba89483241bba0219ff292858e10d9d5768ee
 COPY --from=py /app/code /app/code
 COPY --from=ui /ui/.next/standalone /app/code/ui
 COPY --from=ui /ui/.next/static /app/code/ui/.next/static
@@ -42,6 +42,7 @@ COPY --from=ui /ui/public /app/code/ui/public
 COPY --from=ui /usr/local/bin/node /app/code/node/bin/node
 RUN rm -rf /app/code/ui/.next/cache && ln -s /run/ui-cache /app/code/ui/.next/cache
 COPY nginx.conf supervisord.conf start.sh run-backend.sh run-ui.sh set-admin-email.sh /app/code/
-RUN chmod 755 /app/code/start.sh /app/code/run-backend.sh /app/code/run-ui.sh /app/code/set-admin-email.sh
+COPY bin/lancedb-maintain.py /app/code/bin/lancedb-maintain.py
+RUN chmod 755 /app/code/start.sh /app/code/run-backend.sh /app/code/run-ui.sh /app/code/set-admin-email.sh /app/code/bin/lancedb-maintain.py
 ENV PYTHONPATH=/app/code UV_PYTHON_DOWNLOADS=never
 CMD ["/app/code/start.sh"]
