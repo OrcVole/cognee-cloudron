@@ -1,3 +1,7 @@
+[0.1.2]
+* Update Cognee 1.6.5 to 1.6.6 (commit df2b4fa). Security items in upstream's notes: cleanup operations now check delete permission before removing data, and key-management errors are surfaced to the caller instead of being hidden.
+* Upstream behaviour changes: conflict review is on by default (a new durable conflict-resolution API is added); fastembed moves from 0.8.0 or older to 0.9.1 or newer, and the package keeps its model cache at /app/models/fastembed; the diskcache dependency is removed; Redis list and context deletes are atomic. The LanceDB (0.39) and Ladybug (0.19.0) pins are unchanged, so the baked Ladybug extension image is unchanged. Upstream's offline benchmark reference results (about 6 MB under `eval_framework`) are left out of the image: the server does not use them. Conflict review runs as a stage of `POST /api/v1/improve`; without an LLM key that stage is skipped and add, cognify and search are unaffected. On the first start after the update LanceDB trims its table version history (rows and the graph are unchanged), so the data directory shrinks sharply.
+
 [0.1.1]
 * Base image cloudron/base 6.0.0 to 6.0.1: Ubuntu security updates, including the removal of the compromised eMudhra emSign ECC Root CA - G3 from the trusted certificates.
 * Update Cognee 1.6.2 to 1.6.5 (commit 37f788b). Security items in upstream's notes: public sign-up no longer accepts a parent account (1.6.3), extraction reasons are removed from logs (1.6.3), and the Google Calendar connector was hardened (1.6.5). Self-registration is closed in this package.

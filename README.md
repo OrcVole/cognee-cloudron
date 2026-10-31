@@ -2,7 +2,7 @@
 
 A [Cloudron](https://www.cloudron.io) package for [Cognee](https://github.com/topoteretes/cognee), an
 open-source memory layer for AI agents: documents go in, a knowledge graph and a vector index come out,
-and agents query them. This repository packages upstream release **v1.6.5** (commit `37f788b`) on
+and agents query them. This repository packages upstream release **v1.6.6** (commit `df2b4fa`) on
 `cloudron/base` 6.0.1. It contains no upstream source; the image build fetches it at the pinned commit.
 
 ![The Mindmap of a small demo dataset](screenshots/mindmap.png)

@@ -9,7 +9,11 @@ FROM ghcr.io/astral-sh/uv:0.12.22@sha256:f513a91fc62fe7c17567eee97230dd198e43edb
 
 FROM docker.io/cloudron/base:6.0.1@sha256:7b1e729960c3ca312d26e886917ba89483241bba0219ff292858e10d9d5768ee AS src
 WORKDIR /src
-RUN git init && git remote add origin https://github.com/topoteretes/cognee.git && git fetch --depth 1 origin 37f788bd287750e10d7610173e5332b3843f6ebd && git checkout FETCH_HEAD
+RUN git init && git remote add origin https://github.com/topoteretes/cognee.git && git fetch --depth 1 origin df2b4facd7c1d73b59376fd251fb93674a9d60a3 && git checkout FETCH_HEAD \
+    # Upstream's offline benchmark reference results (about 6 MB, 58 files) are not used by the running server and are left out
+    # of the image: one of them contains incidental text that the release secret scan flags. The test makes this loud if upstream moves them.
+ && rm -rf cognee/eval_framework/*/report_artifacts \
+ && test -z "$(find . -path '*report_artifacts*' -type f | head -1)"
 
 FROM docker.io/library/node:22.23.4-bookworm-slim@sha256:de170b39439eb0e5a3444ad7d60b015614a381e10fecae2e30ec9e735122f38d AS ui
 COPY --from=src /src/cognee-frontend /ui
