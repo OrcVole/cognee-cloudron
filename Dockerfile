@@ -1,4 +1,5 @@
-FROM ghcr.io/ladybugdb/extension-repo@sha256:180c83fb190e9d6ef8d324850b192db26794ab7cb866a38813a45365f14bd46d AS ladybug-extensions
+# Ladybug extension image: digest is the one upstream's v1.6.8 Dockerfile pins (verified to exist with skopeo, 2026-11-14); it carries the v0.22.0 JSON extension that ladybug 0.22.3 requests.
+FROM ghcr.io/ladybugdb/extension-repo@sha256:2ab4c9473d4152ccd40effcc185cab699ab4c2716065854a9823ce3d61afc582 AS ladybug-extensions
 RUN mkdir -p /bundle && cd /usr/share/nginx/html && \
     for f in v*/linux_*/json/libjson.lbug_extension; do \
         d="/bundle/${f%/json/libjson.lbug_extension}"; \
@@ -9,7 +10,7 @@ FROM ghcr.io/astral-sh/uv:0.12.22@sha256:f513a91fc62fe7c17567eee97230dd198e43edb
 
 FROM docker.io/cloudron/base:6.0.1@sha256:7b1e729960c3ca312d26e886917ba89483241bba0219ff292858e10d9d5768ee AS src
 WORKDIR /src
-RUN git init && git remote add origin https://github.com/topoteretes/cognee.git && git fetch --depth 1 origin df2b4facd7c1d73b59376fd251fb93674a9d60a3 && git checkout FETCH_HEAD \
+RUN git init && git remote add origin https://github.com/topoteretes/cognee.git && git fetch --depth 1 origin 069f3cc119bdf5628be054bb915992b2fc78cfc5 && git checkout FETCH_HEAD \
     # Upstream's offline benchmark reference results (about 6 MB, 58 files) are not used by the running server and are left out
     # of the image: one of them contains incidental text that the release secret scan flags. The test makes this loud if upstream moves them.
  && rm -rf cognee/eval_framework/*/report_artifacts \
